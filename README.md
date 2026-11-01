@@ -9,13 +9,18 @@
 2. 国内 AI 的网页/API 直连。
 3. Apple 商店入口、下载及证书服务默认直连；其他 AppleProxy 服务仍走 Apple 代理组。
 4. Apple、Spotify 的专用规则。
-5. 通用 Proxy 集合。
-6. 通用 China 集合。
-7. `GEOIP,CN,DIRECT`，最后由默认代理兜底。
+5. Meta 专用规则（Facebook、Instagram、WhatsApp、Threads、Meta AI 等）走默认代理。
+6. 通用 Proxy 集合。
+7. 通用 China 集合。
+8. `GEOIP,CN,DIRECT`，最后由默认代理兜底。
 
 通用 Proxy 优先于通用 China：两者会有重叠，例如 `google.cn` 和
 `login.microsoftonline.com`。需要覆盖默认行为时，应在前部添加精确例外。
 `RULE-SET` 与 `DOMAIN-SET` 是互补文件，Apple、Proxy、China 均应配套使用。
+
+Meta 规则使用 MetaCubeX 提供的 [classical/meta.list](https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/meta.list)。
+同目录的 `meta.yaml` 是带 `payload` 的 Clash 规则格式，不能直接作为本配置的
+`RULE-SET` 引用；`.list` 提供相同规则的纯文本版本，可直接使用并随上游更新。
 
 国内 AI 直连包括 DeepSeek、Kimi、Moonshot 国内域名、豆包，以及
 `discovery-api.intern-ai.org.cn`。海外域名及中转接口使用各自现有规则；
@@ -43,6 +48,7 @@ Linux 上的格式与规则匹配检查不能代替 Shadowrocket 实机验证。
 | B站、抖音的视频及图片请求 | 直连，播放和拖动正常 |
 | 国内 AI 网页、API | 直连，流式响应正常 |
 | Google、海外 AI、linux.do、NodeSeek | 对应代理策略 |
+| Facebook、Instagram、WhatsApp、Threads、Meta AI | 默认代理，Meta 远程规则加载成功 |
 | App Store 入口、下载、Apple OCSP、DigiCert 的 OCSP/CRL/证书下载端点 | Apple 基础组，默认直连 |
 | Apple 开发者、TestFlight、Apple TV | Apple 代理组 |
 | EMBY | 仅筛选预期地区节点，并验证实际播放、拖动及手动切换 |
